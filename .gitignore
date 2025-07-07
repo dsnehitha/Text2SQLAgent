@@ -1,0 +1,21 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Logs
+*.log
+
+# Database
+*.db
+*.sqlite
