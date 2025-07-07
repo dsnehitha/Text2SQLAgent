@@ -35,11 +35,11 @@ else
     echo "✅ Ollama is already installed"
     
     # Check if the default model is available
-    if ! ollama list | grep -q "llama3.1:8b"; then
-        echo "Downloading default model (llama3.1:8b)..."
-        ollama pull llama3.1:8b
+    if ! ollama list | grep -q "llama3.2:3b"; then
+        echo "Downloading default model (llama3.2:3b)..."
+        ollama pull llama3.2:3b
     else
-        echo "✅ Default model (llama3.1:8b) is available"
+        echo "✅ Default model (llama3.2:3b) is available"
     fi
 fi
 

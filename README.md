@@ -37,7 +37,7 @@ A LangChain-based agent that converts natural language questions into SQL querie
    ```
    # Ollama settings (adjust model as needed)
    OLLAMA_BASE_URL=http://localhost:11434
-   OLLAMA_MODEL=llama3.1:8b
+   OLLAMA_MODEL=llama3.2:3b
    
    # AWS RDS settings
    AWS_RDS_HOST=your_aws_rds_host
@@ -97,7 +97,7 @@ User Question
      ↓
 ┌─────────────────┐
 │   Text2SQL      │
-│     Agent       │ ← Ollama LLM (llama3.1:8b)
+│     Agent       │ ← Ollama LLM (llama3.2:3b)
 │  (LangGraph)    │
 └─────────────────┘
      ↓

@@ -13,10 +13,10 @@ def test_ollama():
     """Test Ollama connectivity"""
     print("🔹 Testing Ollama...")
     try:
-        model_name = os.getenv('OLLAMA_MODEL', 'llama3.1:8b')
+        model_name = os.getenv('OLLAMA_MODEL', 'llama3.2:3b')
         base_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
         
-        llm = init_chat_model(f"ollama/{model_name}", base_url=base_url, temperature=0)
+        llm = init_chat_model(f"ollama:{model_name}", base_url=base_url, temperature=0)
         response = llm.invoke("What is 2+2?")
         print(f"  ✅ Ollama working - Response: {response.content}")
         return True
