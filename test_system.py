@@ -4,8 +4,9 @@ Comprehensive system test for Text2SQL Agent
 import os
 import subprocess
 from dotenv import load_dotenv
-from database_setup import get_db_connection
+from database_setup import get_db_engine, Employee
 from langchain.chat_models import init_chat_model
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ def test_ollama():
     try:
         model_name = os.getenv('OLLAMA_MODEL', 'llama3.2:3b')
         base_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
-        
+
         llm = init_chat_model(f"ollama:{model_name}", base_url=base_url, temperature=0)
         response = llm.invoke("What is 2+2?")
         print(f"  ✅ Ollama working - Response: {response.content}")
@@ -28,13 +29,12 @@ def test_database():
     """Test database connectivity"""
     print("🔹 Testing Database...")
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute("SELECT COUNT(*) FROM employees")
-        count = cursor.fetchone()[0]
+        engine = get_db_engine()
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        count = session.query(Employee).count()
         print(f"  ✅ Database working - {count} employees found")
-        cursor.close()
-        conn.close()
+        session.close()
         return True
     except Exception as e:
         print(f"  ❌ Database failed: {e}")
