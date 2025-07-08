@@ -8,6 +8,7 @@ from langchain_core.messages import AIMessage
 from langchain_core.runnables import RunnableConfig
 from langgraph.graph import END, START, MessagesState, StateGraph
 from langgraph.prebuilt import ToolNode
+from langsmith import traceable
 
 load_dotenv()
 
@@ -38,6 +39,7 @@ def setup_database_connection() -> SQLDatabase:
     
     return db
 
+@traceable(name="create_sql_agent", run_type="tool")
 def create_sql_agent(llm, db: SQLDatabase):
     """Create the custom SQL agent using Graph API"""
     toolkit = SQLDatabaseToolkit(db=db, llm=llm)
@@ -185,6 +187,7 @@ def query_agent(agent, question: str) -> List[Dict[str, Any]]:
     
     return messages
 
+@traceable(name="text2sql_agent_main")
 def main():
     """Main function to run the text-to-SQL agent"""
     try:
