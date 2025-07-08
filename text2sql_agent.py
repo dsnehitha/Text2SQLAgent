@@ -13,12 +13,12 @@ load_dotenv()
 
 def initialize_llm():
     """Initialize the LLM using open-source model via Ollama"""
-    model_name = os.getenv('OLLAMA_MODEL', 'llama3.2:3b')
+    model_name = os.getenv('GPT_MODEL', 'openai:gpt-4.1')
     base_url = os.getenv('OLLAMA_BASE_URL', 'http://localhost:11434')
     
     return init_chat_model(
-        model=f"ollama:{model_name}",
-        base_url=base_url,
+        model=model_name,
+        # base_url=base_url,
         temperature=0
     )
 
@@ -106,10 +106,10 @@ def main():
         
         # Sample queries
         sample_questions = [
-            # "How many employees are in each department?",
-            # "What are the top 3 best-selling products by revenue?",
-            # "Which employee made the most sales in 2024?",
-            # "Show me all products in the Electronics category with their prices",
+            "How many employees are in each department?",
+            "What are the top 3 best-selling products by revenue?",
+            "Which employee made the most sales in 2024?",
+            "Show me all products in the Electronics category with their prices",
             "What is the average salary by department?"
         ]
         
