@@ -58,17 +58,32 @@ def test_full_agent():
         print(f"  ❌ Agent failed: {e}")
         return False
 
+def test_gpt():
+    """Test GPT connectivity"""
+    print("🔹 Testing GPT...")
+    try:
+        gpt_model = os.getenv('GPT_MODEL', 'openai:gpt-4.1')
+        
+        llm = init_chat_model(gpt_model, temperature=0)
+        response = llm.invoke("What is 2+2?")
+        print(f"  ✅ GPT working - Response: {response.content}")
+        return True
+    except Exception as e:
+        print(f"  ❌ GPT failed: {e}")
+        return False
+
 def main():
     """Run all tests"""
     print("Text2SQL System Test")
     print("=" * 30)
     
     ollama_ok = test_ollama()
+    gpt_ok = test_gpt()
     db_ok = test_database()
-    agent_ok = test_full_agent() if ollama_ok and db_ok else False
+    agent_ok = test_full_agent() if (ollama_ok or gpt_ok) and db_ok else False
     
     print("\n" + "=" * 30)
-    if all([ollama_ok, db_ok, agent_ok]):
+    if all([db_ok, agent_ok]) and (ollama_ok or gpt_ok):
         print("🎉 All systems working!")
     else:
         print("⚠️  Some systems need attention")

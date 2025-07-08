@@ -1,11 +1,12 @@
 # Text2SQLAgent
 
-A LangChain-based agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database on AWS using open-source LLMs via Ollama.
+A LangChain-based agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database on AWS using open-source LLMs via Ollama or OpenAI GPT models.
 
 ## Features
 
 - Text-to-SQL conversion using LangChain and LangGraph
-- **Open-source LLM support via Ollama** (no API keys required!)
+- **Multiple LLM support**: Ollama (open-source, no API keys) or OpenAI GPT models
+- **SQLAlchemy ORM integration** for robust database operations
 - PostgreSQL database integration on AWS RDS
 - Pre-built mock dataset (employees, products, sales)
 - Interactive CLI interface
@@ -35,9 +36,14 @@ A LangChain-based agent that converts natural language questions into SQL querie
 4. **Configure Credentials**
    Edit `.env` file with your credentials:
    ```
-   # Ollama settings (adjust model as needed)
+   # LLM settings (choose one)
+   # For Ollama (open-source, local)
    OLLAMA_BASE_URL=http://localhost:11434
    OLLAMA_MODEL=llama3.2:3b
+   
+   # For OpenAI GPT (requires API key)
+   GPT_MODEL=openai:gpt-4.1
+   OPENAI_API_KEY=your_openai_api_key
    
    # AWS RDS settings
    AWS_RDS_HOST=your_aws_rds_host
@@ -74,12 +80,19 @@ python test_system.py
 
 ## Supported Models
 
-The agent uses Ollama for running open-source models locally. 
+The agent supports two LLM options:
 
-To change models, update the `OLLAMA_MODEL` in your `.env` file and run:
+### Ollama (Open Source)
+- Run models locally without API keys
+- To change models, update `OLLAMA_MODEL` in `.env` and run:
 ```bash
 ollama pull <model-name>
 ```
+
+### OpenAI GPT
+- Requires OpenAI API key
+- Update `GPT_MODEL` and `OPENAI_API_KEY` in `.env`
+- Supports GPT-4 and other OpenAI models
 
 ## Database Schema
 
@@ -97,7 +110,7 @@ User Question
      ↓
 ┌─────────────────┐
 │   Text2SQL      │
-│     Agent       │ ← Ollama LLM (llama3.2:3b)
+│     Agent       │ ← Ollama LLM / OpenAI GPT
 │  (LangGraph)    │
 └─────────────────┘
      ↓
@@ -112,6 +125,7 @@ User Question
 ┌─────────────────┐
 │   PostgreSQL    │
 │   (AWS RDS)     │
+│   SQLAlchemy    │
 │                 │
 │ employees       │
 │ products        │
@@ -123,4 +137,4 @@ Natural Language Answer
 
 **Flow**: Question → Agent Analysis → SQL Generation → Database Query → Formatted Response
 
-**Key Components**: LangGraph ReAct Agent + Ollama LLM + PostgreSQL + Error Correction Loop
+**Key Components**: LangGraph ReAct Agent + LLM (Ollama/GPT) + PostgreSQL + SQLAlchemy + Error Correction Loop
