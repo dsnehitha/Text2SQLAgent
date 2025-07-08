@@ -1,16 +1,17 @@
 # Text2SQLAgent
 
-A LangChain-based agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database on AWS using open-source LLMs via Ollama or OpenAI GPT models.
+A LangChain-based agent that converts natural language questions into SQL queries and executes them against a PostgreSQL database on AWS using **custom LangGraph workflows** with open-source LLMs via Ollama or OpenAI GPT models.
 
 ## Features
 
-- Text-to-SQL conversion using LangChain and LangGraph
+- Text-to-SQL conversion using **custom LangGraph Graph API** (not pre-built agents)
 - **Multiple LLM support**: Ollama (open-source, no API keys) or OpenAI GPT models
+- **Custom workflow with dedicated nodes**: Table listing → Schema retrieval → Query generation → Query validation → Execution
 - **SQLAlchemy ORM integration** for robust database operations
 - PostgreSQL database integration on AWS RDS
 - Pre-built mock dataset (employees, products, sales)
 - Interactive CLI interface
-- Automated query validation and error correction
+- **Built-in query validation and error correction workflow**
 - **Comprehensive system testing**
 
 ## Quick Start
@@ -109,17 +110,19 @@ The mock dataset includes three tables:
 User Question
      ↓
 ┌─────────────────┐
-│   Text2SQL      │
-│     Agent       │ ← Ollama LLM / OpenAI GPT
-│  (LangGraph)    │
+│   Custom SQL    │
+│   Graph Agent   │ ← Ollama LLM / OpenAI GPT
+│  (LangGraph     │
+│   Graph API)    │
 └─────────────────┘
      ↓
 ┌─────────────────┐
-│  SQL Toolkit    │
-│ • List Tables   │
-│ • Get Schemas   │
-│ • Execute Query │
-│ • Validate SQL  │
+│  Workflow Nodes │
+│ 1. List Tables  │
+│ 2. Get Schema   │
+│ 3. Generate SQL │
+│ 4. Validate SQL │
+│ 5. Execute SQL  │
 └─────────────────┘
      ↓
 ┌─────────────────┐
@@ -135,6 +138,16 @@ User Question
 Natural Language Answer
 ```
 
-**Flow**: Question → Agent Analysis → SQL Generation → Database Query → Formatted Response
+**Custom Workflow**: Question → List Tables → Get Schema → Generate Query → Validate Query → Execute → Loop if needed
 
-**Key Components**: LangGraph ReAct Agent + LLM (Ollama/GPT) + PostgreSQL + SQLAlchemy + Error Correction Loop
+**Key Components**: Custom LangGraph StateGraph + Dedicated Node Functions + LLM (Ollama/GPT) + PostgreSQL + SQLAlchemy + Built-in Error Correction
+
+## Custom Graph Implementation
+
+This agent uses LangGraph's **Graph API** instead of pre-built agents for better control:
+
+- **Dedicated Nodes**: Each step (table listing, schema retrieval, query generation, validation, execution) has its own node
+- **Enforced Workflow**: The graph ensures the agent always follows the correct sequence
+- **Custom Prompts**: Each node can have specialized system prompts for its specific task
+- **Built-in Validation**: Automatic query checking before execution to catch common SQL mistakes
+- **Error Recovery**: Loop back mechanism for query refinement after execution errors
