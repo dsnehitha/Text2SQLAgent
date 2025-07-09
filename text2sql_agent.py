@@ -140,7 +140,7 @@ def create_sql_agent(llm, db: SQLDatabase):
         
         return {"messages": [response]}
     
-    def should_continue(state: MessagesState):
+    def should_continue(state: MessagesState) -> Literal[END, "check_query"]:
         """Determine whether to continue with query checking or end"""
         messages = state["messages"]
         last_message = messages[-1]
@@ -211,6 +211,11 @@ def main():
         for question in sample_questions:
             query_agent(agent, question)
             print("\n" + "=" * 60)
+        
+        png_bytes = agent.get_graph().draw_mermaid_png()
+
+        with open("graph.png", "wb") as f:
+            f.write(png_bytes)
         
     except Exception as e:
         print(f"Error: {e}")
